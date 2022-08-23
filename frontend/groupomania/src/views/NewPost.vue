@@ -1,15 +1,15 @@
 <template>
 
   <header id="red-band">
-    <img id="group-logo" src="../assets/whitelogo.png" alt="logo entreprise">
+    <router-link id="return" to="/accueil"><img id="group-logo" src="../assets/whitelogo.png" alt="logo entreprise"></router-link>
+    <p class="text-pp"><img class="profil-picture logo-background-white" src="../assets/logo.png" alt="user profil picture">User Name</p>
   </header>
 
-  <!--définir les routes-->
-  <nav>
-    <router-link class="text-nav" to="/poste">Fil d'actualité</router-link> |
+  <!-- <nav>
+    <router-link class="text-nav" to="/accueil">Fil d'actualité</router-link> |
     <router-link class="text-nav" to="/newpost">Nouvelle publication</router-link>
   </nav>
-  <router-view />
+  <router-view /> -->
 
   <section id="main">
     <div class="publication">
@@ -20,20 +20,29 @@
         <label for="file" class="label-file">Ajouter un image</label>
           <input id="file" class="input-file" type="file">
         <input class="description" type="text" placeholder="Ta description">
+        <button id="publier">Publier</button>
       </div>
-      <button id="publier">Publier</button>
     </div>
 
   </section>
-
+  <Footer :isFixed="true"></Footer>
 </template>
 
 <style scoped>
 
+header{
+  display: flex;
+  justify-content: space-between;
+  flex-direction: row;
+  border-style: none;
+  background-color: #FD2D01;
+  height: 6vh;
+}
+
 label{
   font-size: 15px;
   font-style: italic;
-  margin-bottom: 10px;
+  margin-bottom: 25px;
 }
 
 nav {
@@ -55,6 +64,21 @@ hr{
   color: black;
 }
 
+.logo-background-white{
+  background-color: #ffff;
+}
+
+.text-nav {
+  text-decoration: none;
+  color: black;
+}
+
+.text-pp{
+  display: flex;
+  align-items: center;
+  margin: 15px;
+}
+
 .label-file {
     cursor: pointer;
     color: #FD2B01;
@@ -74,9 +98,8 @@ hr{
   border-radius: 10px;
   width: 25%;
   margin: 15px;
-  box-shadow: 3px 3px 10px grey;
+  box-shadow: 12px 15px 40px #ffd7d7;
   background-color: #ffff;
-  height: 15vh;
 }
 
 .profil-picture {
@@ -88,18 +111,20 @@ hr{
   border: 1px solid #deebff;
   text-align: center;
   margin-right: 15px;
-  margin-left: 10px;
+  /* margin-left: 10px; */
   object-fit: cover;
 }
 
 .text-pp {
   display: flex;
   align-items: center;
+  margin: 15px;
 }
 
 .picture-post{
     display: flex;
     flex-direction: column;
+    align-items: center;
 }
 
 .pict {
@@ -114,15 +139,18 @@ hr{
   width: 50%;
 }
 
-
 #red-band {
   border-style: none;
   background-color: #FD2D01;
 }
 
 #group-logo {
-  width: 15%;
   margin: 10px;
+}
+
+#return{
+    display: flex;
+    justify-content: center;
 }
 
 #main {
@@ -131,6 +159,26 @@ hr{
   justify-content: center;
   align-items: center;
   flex-direction: column;
+  margin: 60px;
+}
+
+#publier{
+  margin: 40px;
+  border-radius: 1px;
+  border-style: solid;
+  border-width: 1px;
+  width: 25%;
+  height: 30px;
+  background-color: white;
+  font-size: 16px;
+  text-align: center;
+}
+
+#publier:hover{
+    cursor: pointer;
+    background-color: #FD2B01;
+    color: #ffffff;
+    border-color: #FD2B01;
 }
 
 /* #publier{
@@ -144,8 +192,9 @@ hr{
 
 <script>
 // @ is an alias to /src
-
+import Footer from '@/components/Footer.vue'
 export default {
-  name: 'Poste'
+  name: 'NewPost',
+  components: { Footer }
 }
 </script>

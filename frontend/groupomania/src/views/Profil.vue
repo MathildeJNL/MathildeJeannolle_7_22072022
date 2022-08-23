@@ -1,7 +1,7 @@
 <template>
 
   <header id="red-band">
-    <router-link id="return" to="/poste"><img id="group-logo" src="../assets/whitelogo.png" alt="logo entreprise"></router-link>
+    <router-link id="return" to="/accueil"><img id="group-logo" src="../assets/whitelogo.png" alt="logo entreprise"></router-link>
     <p class="text-pp"><img class="profil-picture logo-background-white" src="../assets/logo.png" alt="user profil picture">User Name</p>
   </header>
 
@@ -18,7 +18,7 @@
     </div>
     
   </section>
-
+  <Footer :isFixed="true"></Footer>
 </template>
 
 <style scoped>
@@ -51,7 +51,7 @@ header{
   width: 25%;
   margin: 15px;
   padding-top: 30px;
-  box-shadow: 3px 3px 10px grey;
+  box-shadow: 12px 15px 40px #ffd7d7;
   background-color: #ffff;
   height: 30vh;
   display: flex;
@@ -69,6 +69,7 @@ header{
   text-align: center;
   margin-right: 6px;
   margin-left: 10px;
+  object-fit: cover;
 }
 
 .main-profil{
@@ -132,8 +133,9 @@ header{
 
 <script>
 // @ is an alias to /src
-
+import Footer from '@/components/Footer.vue'
 export default {
-  name: 'Poste'
+  name: 'Profil',
+  components: { Footer }
 }
 </script>

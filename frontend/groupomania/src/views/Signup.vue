@@ -142,3 +142,10 @@ label{
 }
 
 </style>
+
+<script>
+// @ is an alias to /src
+export default {
+  name: 'Signup'
+}
+</script>

@@ -16,9 +16,9 @@ const routes = [
     component: () => import(/* webpackChunkName: "about" */ '../views/Signup.vue')
   },
   {
-    path: '/poste',
-    name: 'poste',
-    component: () => import(/* webpackChunkName: "about" */ '../views/Poste.vue')
+    path: '/accueil',
+    name: 'accueil',
+    component: () => import(/* webpackChunkName: "about" */ '../views/Accueil.vue')
   },
   {
     path: '/newpost',
@@ -34,6 +34,11 @@ const routes = [
     path: "/modification",
     name: "modification",
     component: () => import(/* webpackChunkName: "about" */ '../views/ModificationProfil.vue')
+  },
+  {
+    path: "/password",
+    name: "password",
+    component: () => import(/* webpackChunkName: "about" */ '../views/NewMdp.vue')
   }
 ]
 

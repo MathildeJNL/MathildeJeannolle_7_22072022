@@ -117,16 +117,12 @@ input{
   position: relative;
 }
 
-
 </style>
-
 
 <script>
 // @ is an alias to /src
-
 export default {
   name: 'Login',
-
   methods: {
     login(){
       //fetch
@@ -134,5 +130,4 @@ export default {
     }
   },
 }
-
 </script>
