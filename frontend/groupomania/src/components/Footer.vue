@@ -41,7 +41,16 @@ footer ul li{
   justify-content: space-around;
   font-size: 16px;
   align-items: center;
+  padding: 0;
 }
+
+@media all and (max-width: 768px) {
+.main-list{
+  font-size: 11px;
+}
+
+}
+
 </style>
 
 <script>

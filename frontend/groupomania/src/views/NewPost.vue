@@ -62,6 +62,8 @@ hr{
 .text-nav {
   text-decoration: none;
   color: black;
+  display: flex;
+  align-items: center;
 }
 
 .logo-background-white{
@@ -181,13 +183,65 @@ hr{
     border-color: #FD2B01;
 }
 
-/* #publier{
-        display: flex;
-    flex-direction: column;
-    align-items: center;
-    width: 25%;
-    justify-content: center;
-} */
+@media all and (min-width: 769px) and (max-width: 1024px) {
+
+.publication{
+  width: 60%;
+}
+
+}
+
+@media all and (max-width: 768px) {
+
+p{
+  font-size: 11px;
+}
+
+.text-pp{
+  font-size: 10px;
+}
+
+.profil-picture{
+  height: 20px;
+  width: 20px;
+  margin-left: 5px;
+  margin-right: 5px;
+}
+
+.publication{
+  margin: 0;
+  width: 85%;
+  margin-top: 30px;
+  margin-bottom: 30px;
+}
+
+.label-file{
+  margin-left: 0;
+  font-size: 11px;
+}
+
+.description{
+  margin-left: 0;
+  font-size: 11px;
+}
+
+#main{
+  margin: 0;
+}
+
+#group-logo{
+  width: auto;
+}
+
+#publier{
+  margin: 15px;
+  width: 20%;
+  height: 20px;
+  font-size: 11px;
+}
+
+}
+
 </style>
 
 <script>

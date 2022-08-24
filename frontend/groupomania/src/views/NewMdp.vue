@@ -118,6 +118,60 @@ header{
   background-color: white;
 }
 
+@media all and (min-width: 769px) and (max-width: 1024px) {
+
+#formulaire{
+  width: 60%;
+}
+
+}
+
+@media all and (max-width: 768px){
+  
+p{
+  font-size: 11px;
+}
+
+.text-pp{
+  margin: 0;
+  margin-right: 5px;
+}
+
+.text-nav{
+  display: flex;
+  align-items: center;
+}
+
+.profil-picture{
+  height: 20px;
+  width: 20px;
+}
+
+#group-logo{
+  width: auto;
+}
+
+#formulaire{
+  padding: 0;
+  margin: 0;
+  margin-top: 30px;
+  width: 80%;
+}
+
+.txt{
+  font-size: 11px;
+  height: 20px;
+  width: 70%;
+}
+
+.pure-button{
+  width: 30%;
+  height: 25px;
+  font-size: 11px;
+}
+
+}
+
 </style>
 
 <script>

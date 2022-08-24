@@ -31,6 +31,10 @@
 </template>
 
 <style scoped>
+.home{
+  margin: 0;
+  background-color: white!important;
+}
 
 .label-file {
     cursor: pointer;
@@ -98,7 +102,6 @@ label{
   border-radius: 17px;
   box-shadow: 10px 15px 30px -8px #fd2b017a;
   width: 40%;
-  height: 65vh;
   padding: 10px;
   display: flex;
   align-items: center;
@@ -139,6 +142,68 @@ label{
   height: 99.6%;
   width: 100%;
   position: relative;
+}
+
+@media all and (min-width: 769px) and (max-width: 1024px){
+
+#background-img{
+  display: none;
+}
+
+#background{
+  display: none;
+}
+
+.group-logo{
+  width: 60%;
+}
+
+#bloc1{
+  width: 100%;
+}
+
+#formulaire{
+  width: 60%;
+}
+
+}
+
+@media all and (max-width: 768px){
+.group-logo{
+  width: 70%;
+}
+
+.txt{
+  width: 70%;
+  height: 23px;
+}
+
+#background-img{
+  display: none;
+}
+
+#background{
+  display: none;
+}
+
+#bloc1{
+  width: 100%;
+}
+
+#formulaire{
+  width: 80%;
+}
+
+#date{
+  margin: 10px;
+  height: 14px;
+  font-size: 12px;
+}
+
+#inscription{
+  margin-top: 30px;
+}
+
 }
 
 </style>

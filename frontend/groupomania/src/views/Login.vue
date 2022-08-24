@@ -69,7 +69,6 @@ input{
   border-radius: 17px;
   box-shadow: 10px 15px 30px -8px #fd2b017a;
   width: 40%;
-  height: 45vh;
   padding: 10px;
   display: flex;
   align-items: center;
@@ -85,7 +84,6 @@ input{
   height: 35px;
   background-color: white;
   margin-top: 50px;
-  font-size: 16px;
   text-align: center;
 }
 
@@ -115,6 +113,59 @@ input{
   height: 99.6%;
   width: 100%;
   position: relative;
+}
+
+@media all and (min-width: 769px) and (max-width: 1024px){
+
+#background-img{
+  display: none;
+}
+
+#background{
+  display: none;
+}
+
+.group-logo{
+  width: 60%;
+}
+
+#bloc1{
+  width: 100%;
+}
+
+#formulaire{
+  width: 60%;
+  height: none;
+}
+
+}
+
+@media all and (max-width: 768px){
+
+#background-img{
+  display: none;
+}
+
+#background{
+  display: none;
+}
+
+.group-logo{
+  width: 70%;
+}
+
+.txt{
+  font-size: 12px;
+}
+
+#bloc1{
+  width: 100%;
+}
+
+#formulaire{
+  width: 80%;
+}
+
 }
 
 </style>
