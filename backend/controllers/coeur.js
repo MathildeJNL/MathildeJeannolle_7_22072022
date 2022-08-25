@@ -20,7 +20,6 @@ exports.like = (req, res, next) => {
                 .then((coeur) => {
                     //si le coeur est = null on crée le coeur
                     if(coeur == null){
-                        console.log("création coeur")
                         Coeur.create(newCoeur)
                             .then(data =>{res.status(201).json({message: "Liked"})})
                             .catch(err => {res.status(500).json({error:"Une erreur s\'est produite"})});
@@ -30,12 +29,12 @@ exports.like = (req, res, next) => {
                     }
 
                 })
-                .catch(err => res.status(500).json({err, message: err.message}));
+                .catch(err => res.status(500).json({err, error: err.message}));
         //si on dislike, on supprime le coeur en question sur le poste et le user en question
         }else{
             Coeur.destroy({ where: {utilisateur_id: req.auth.userId, poste_id: poste.poste_id} })
                 .then(() => res.status(201).json({message: "Disliked"}))
-                .catch(err => res.status(500).json({err, message: err.message}));
+                .catch(err => res.status(500).json({err, error: err.message}));
         
         }
     }).catch(err => {res.status(500).json({error:"Une erreur s\'est produite"})})

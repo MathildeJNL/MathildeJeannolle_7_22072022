@@ -12,13 +12,13 @@
           <!-- <label for="file">Ajouter une image de profil</label>
           <br>
           <input id="file" type="file"> -->
-          <input class="txt" type="text" placeholder="Nom">
-          <input class="txt" type="text" placeholder="Prénom">
-          <input class="txt" type="text" placeholder="Poste occupé">
-          <input id="date" type="date">
-          <input class="txt" type="email" placeholder="Mail">
-          <input class="txt" type="password" placeholder="Password">
-          <button id="inscription">S'inscrire</button>
+          <input class="txt" type="text" placeholder="Nom" v-model="nom">
+          <input class="txt" type="text" placeholder="Prénom" v-model="prenom">
+          <input class="txt" type="text" placeholder="Poste occupé" v-model="poste">
+          <input id="date" type="date" v-model="age">
+          <input class="txt" type="email" placeholder="Mail" v-model="mail">
+          <input class="txt" type="password" placeholder="Password" v-model="password">
+          <button @click="signup" id="inscription">S'inscrire</button>
         </div>
     </div>
     
@@ -209,8 +209,70 @@ label{
 </style>
 
 <script>
+import router from '@/router';
+
 // @ is an alias to /src
 export default {
-  name: 'Signup'
+  name: 'Signup',
+  data(){
+    return{
+      nom: null,
+      prenom: null,
+      mail: null,
+      password: null,
+      age: null,
+      poste: null
+    }
+  },
+  methods:{
+    signup(){
+      console.log(this.input_verification());
+      //permet de récupérer l'img de l'input
+      let image = document.getElementById("file").files[0]
+      //On crée un formulaire
+      let formData = new FormData();
+      //on ajoute au formulaire les input(ils font ref à data par le v-model)
+      formData.append("image", image);
+      formData.append("nom", this.nom);
+      formData.append("prenom", this.prenom);
+      formData.append("mail", this.mail);
+      formData.append("password", this.password);
+      formData.append("age", this.age);
+      formData.append("poste_occupe", this.poste);
+
+      //création d'options de l'envoie à l'API avec la méthode (POST) + les données formData
+      const options = {
+          method: 'POST',
+          body: formData,
+      };
+
+      //Je fais appel à l'API
+      fetch("http://localhost:3000/api/auth/signup", options)
+
+      /*1ère promesse .then = récupérer le résultat (res) de la requête au format JSON
+      avec une vérif préalable que la requête s'est bien passée*/
+        .then(function(res){
+          if(res.ok){
+            return res.json();
+          }
+        })
+
+      //2ème promesse si la 1ère est bonne :
+        .then(function(value){
+          alert("Votre compte a bien été créé");
+          router.push("/")
+        })
+        
+      //Si il y a une erreur au moment d'appeler le serveur, on renvoi :
+        .catch(function(err) {
+          alert("Une erreur est survenue... Le serveur ne répond pas")
+        });
+    },
+    input_verification(){
+      return 3
+    }
+  }
+
 }
+
 </script>

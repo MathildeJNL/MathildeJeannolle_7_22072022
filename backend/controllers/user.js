@@ -8,7 +8,32 @@ const fs = require('fs');
 const db = require("../models")
 const User = db.utilisateur;
 
+exports.create_admin = (req, res, next) => {
+    bcrypt.hash("P@ssword123456", 10)
+    .then(hash => {
+        var user = {
+            nom: "super",
+            prenom:"admin",
+            age:"1999-01-06",
+            mail:"admin@admin.com",
+            password:hash,
+            profil_image:`${req.protocol}://${req.get('host')}/images/default_icon.png`,
+            poste_occupe:"administrateur",
+            admin:true
+        };
+        User.create(user).then(data =>{
 
+            res.send(data)
+
+        }).catch(err => {
+
+            res.status(500).json({err:err.message})
+
+        });
+    }) 
+    .catch(error => res.status(500).json({error}));
+    
+}
 
 //enregistrement de nvx users
 exports.signup = (req, res, next) => {
@@ -22,6 +47,7 @@ exports.signup = (req, res, next) => {
                 age:req.body.age,
                 mail:req.body.mail,
                 password:hash,
+                profil_image:`${req.protocol}://${req.get('host')}/images/default_icon.png`,
                 poste_occupe:req.body.poste_occupe,
                 admin:false
             };
@@ -47,7 +73,7 @@ exports.signup = (req, res, next) => {
 
         });
     })
-    .catch(error => res.status(500).json({error}));
+    .catch(error => res.status(500).json({error: error.message}));
 };
 
 // suppression utilisateur
@@ -60,7 +86,7 @@ exports.deleteUser = (req,res,next) =>{
 
             User.destroy({ where: {utilisateur_id: user.utilisateur_id}})
                 .then(() => {
-                    if(user.profil_image != ""){
+                    if(user.profil_image != "" && user.profil_image != null && user.profil_image != undefined){
                         var filename = user.profil_image
                         fs.unlink(`images/${filename}`,()=>{
                             res.status(201).json({message: "Utilisateur Supprimé !"})
@@ -70,7 +96,7 @@ exports.deleteUser = (req,res,next) =>{
                     }
                     
                 })
-                .catch(err => res.status(500).json({err, message: err.message}));
+                .catch(err => res.status(500).json({error: err.message}));
         
         }else{
             res.status(401).json({error: "Vous ne pouvez supprimer l\'utilisateur"})
@@ -108,10 +134,10 @@ exports.login = (req, res, next) => {
                     });
                 }
             })
-            .catch(error => res.status(500).json({error}));
+            .catch(error => res.status(500).json({error : error.message}));
         }
     })
-    .catch(error => res.status(500).json({error}));
+    .catch(error => res.status(500).json({error: error.message}));
 };
 
 
@@ -140,13 +166,13 @@ exports.updatePassword = (req, res, next) => {
         
                 }).catch(err => {
         
-                     res.status(500).json({err : err.mesage})
+                     res.status(500).json({error : err.mesage})
         
                 });
             })
-            .catch(error => res.status(500).json({error}));
+            .catch(error => res.status(500).json({error:error.message}));
         })
-        .catch(error => res.status(500).json({error}))
+        .catch(error => res.status(500).json({error:error.message}))
     }
    
 
@@ -164,7 +190,7 @@ exports.update = (req, res, next) => {
                 var newUser = {
                     nom: req.body.nom,
                     prenom:req.body.prenom,
-                    age:req.body.age,
+                    age:new Date(user.age).toISOString().split("T")[0],
                     mail:user.mail,
                     password:user.password,
                     poste_occupe:req.body.poste_occupe,
@@ -174,7 +200,7 @@ exports.update = (req, res, next) => {
                 var newUser = {
                     nom: req.body.nom,
                     prenom:req.body.prenom,
-                    age:req.body.age,
+                    age:new Date(user.age).toISOString().split("T")[0],
                     mail:user.mail,
                     password:user.password,
                     profil_image:user.profil_image,
@@ -185,7 +211,7 @@ exports.update = (req, res, next) => {
                 var newUser = {
                     nom: req.body.nom,
                     prenom:req.body.prenom,
-                    age:req.body.age,
+                    age:new Date(user.age).toISOString().split("T")[0],
                     mail:user.mail,
                     password:user.password,
                     profil_image:`${req.protocol}://${req.get('host')}/images/${req.file.filename}`,

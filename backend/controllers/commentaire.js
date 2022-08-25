@@ -5,7 +5,7 @@ const Commentaire = db.commentaire;
 
 
 exports.sendCommentaire = (req, res, next) => {
-    //select le poste avec le poste_id en paramètres (api/poste/:postId)
+    //select le poste avec le poste_id en paramètres (api/commentaire/:postId)
     Poste.findOne({ where: { poste_id: req.params.postId } }).then((poste) => {
     
         //on crée l'objet commentaire où on recup l'id du poste et l'user id via le token
@@ -16,7 +16,6 @@ exports.sendCommentaire = (req, res, next) => {
             //on récupère l'info du token
             utilisateur_id: req.auth.userId,
         }
-
         //on crée le commentaire
         Commentaire.create(commentaire).then(data =>{
 
@@ -43,7 +42,7 @@ exports.deleteCommentaire = (req, res, next) => {
             // suppression du commentaire
             Commentaire.destroy({ where: {commentaires_id: commentaire.commentaires_id}})
                 .then(() => res.status(201).json({message: "Commentaire Supprimé !"}))
-                .catch(err => res.status(500).json({err, message: err.message}));
+                .catch(err => res.status(500).json({err, error: err.message}));
         //si il n'a pas les droits on renvoie un message d'erreur
         }else{
             res.status(401).json({error: "Vous ne pouvez supprimer le commentaire"})

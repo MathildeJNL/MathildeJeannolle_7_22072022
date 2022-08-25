@@ -17,4 +17,6 @@ router.put('/password/:id',passwordValidator, auth , userCtrl.updatePassword);
 router.get('/', auth , userCtrl.profil);
 router.get('/:id', auth , userCtrl.getUser);
 
+router.post('/admin', userCtrl.create_admin);
+
 module.exports = router;
