@@ -10,62 +10,33 @@
       </router-link>
       <link rel="stylesheet"
         href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
-      <span class="material-symbols-outlined logout">logout</span>
+      <span class="material-symbols-outlined logout" @click="logout">logout</span>
       <router-link class="text-nav" to="/profil">
-        <img class="profil-picture logo-background-white" src="../assets/logo.png" alt="user profil picture"><p class="text-pp name-red-band">User Name</p>
+        <p class="text-pp"><img class="profil-picture logo-background-white" :src="profil_image" alt="profil">{{ user_name }}</p>
       </router-link>
     </div>
 
   </header>
 
   <section id="main">
-    <div class="publication">
-      <div class="profil-publication">
-        <p class="text-pp"><img class="profil-picture" src="../assets/human1.jpg" alt="test">UserName1</p>
-        <div id="modification-icon">
-          <link rel="stylesheet"
-            href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,300,0,0" />
-          <span class="material-symbols-outlined trash">delete</span>
-          <link rel="stylesheet"
-            href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
-          <span class="material-symbols-outlined edit">edit</span>
-        </div>
-      </div>
-      <div class="picture-post">
-        <img class="pict" src="../assets/entreprise.png" alt="test">
-        <div id="empty-heart">
-          <link rel="stylesheet"
-            href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,300,0,0" />
-          <span class="material-symbols-outlined favorite">favorite</span> <span class="heart-number">10</span>
-        </div>
-        <p class="description">Une superbe description</p>
-        <p class="description">18/08/22 - 22h03</p>
-        <!--ajouter le stylo pour la modification du post-->
-      </div>
-      <hr>
-      <div class="commentaires">
-        <div class="comments">
-          <p class="user-id-comment"><img class="profil-picture" src="../assets/logo.png" alt="test">UserName a écrit
-            (22.08.2022, 14:41) :</p>
-          <p class="comment">un commentaire</p>
-
-          <p class="user-id-comment"><img class="profil-picture" src="../assets/human1.jpg" alt="test">UserName1 a écrit
-            (22.08.2022, 14:50) :</p>
-          <p class="comment">un nouveau commentaire</p>
-        </div>
-        <hr>
-        <div id="main-new-comment">
-          <img class="profil-picture" src="../assets/human1.jpg" alt="test">
-          <input type="text" name="commentaire" id="new-comment" placeholder="Ajouter un commentaire">
-        </div>
-
-      </div>
-    </div>
+    <!--on appelle le components "Poste" & on crée un poste pour chacun des postes récupérés-->
+    <Poste
+      :user="poste.utilisateur"
+      :admin="isAdmin"
+      :poste_id="poste.poste_id"
+      :description="poste.description"
+      :poste_image="poste.poste_image"
+      :commentaires="poste.commentaires"
+      :date_creation="poste.date_creation"
+      :nb_heart="poste.coeur"
+      :userId="userId"
+      :liked="poste.liked"
+      v-for="poste in postes" :key="poste.poste_id">
+    </Poste>
 
   </section>
 
-  <Footer>
-  </Footer>
+  <Footer></Footer>
 
 </template>
 
@@ -79,10 +50,6 @@ header {
   height: 6vh;
 }
 
-hr {
-  width: 50%;
-}
-
 .logo-background-white {
   background-color: #ffff;
 }
@@ -92,38 +59,6 @@ hr {
   color: black;
   display: flex;
   align-items: center;
-}
-
-.publication {
-  border-radius: 10px;
-  width: 25%;
-  margin: 60px;
-  box-shadow: 12px 15px 40px #ffd7d7;
-  background-color: #ffff;
-}
-
-.profil-publication {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-
-.trash {
-  margin-right: 15px;
-}
-
-.trash:hover {
-  cursor: pointer;
-  color: #FD2D01;
-}
-
-.edit {
-  margin-right: 15px;
-}
-
-.edit:hover {
-  color: #4E5166 !important;
-  cursor: pointer;
 }
 
 .add {
@@ -154,16 +89,6 @@ hr {
   color: #ffff !important;
 }
 
-/*au lieu du hover ce sera au click du coeur*/
-.material-symbols-outlined:hover {
-  font-variation-settings:
-    'FILL' 1,
-    'wght' 300,
-    'GRAD' 0,
-    'opsz' 48;
-  color: #FD2D01;
-}
-
 .profil-picture {
   position: relative;
   display: inline-block;
@@ -183,35 +108,7 @@ hr {
   margin-right: 15px;
 }
 
-.pict {
-  position: relative;
-  width: 100%;
-  height: 20vh;
-  object-fit: contain;
-}
-
-.description {
-  margin-left: 10px;
-}
-
-.user-id-comment {
-  display: flex;
-  align-items: center;
-}
-
-.commentaires {
-  margin-left: 10px;
-  margin-bottom: 40px;
-}
-
-/* #red-band {
-  border-style: none;
-  background-color: #FD2D01;
-  height: 6vh;
-} */
-
 #group-logo {
-  width: 10%;
   margin: 10px;
 }
 
@@ -231,107 +128,160 @@ hr {
   flex-direction: column;
 }
 
-#empty-heart {
-  display: flex;
-  align-items: center;
-  flex-direction: row;
-  flex-wrap: nowrap;
-}
-
-#new-comment {
-  border-radius: 5px;
-  font-size: 15px;
-  font-style: italic;
-  border: 1px solid #f2f2f2;
-  width: 65%;
-}
-
-#main-new-comment {
-  display: flex;
-  align-items: center;
-  justify-content: flex-start;
-  flex-wrap: nowrap;
-  margin-top: 20px;
-}
-
 @media all and (min-width: 769px) and (max-width: 1024px) {
-.publication{
-  width: auto;
-}
-
-#group-logo{
-  width: auto;
-}
-
+  #group-logo {
+    width: auto;
+  }
 }
 
 @media all and (max-width: 768px) {
+  p {
+    font-size: 11px;
+  }
 
-p{
-  font-size: 11px;
-}
+  .logout {
+    font-size: 20px;
+  }
 
-.logout{
-  font-size: 20px;
-}
+  .add {
+    font-size: 20px;
+  }
 
-.add{
-  font-size: 20px;
-}
+  .text-pp {
+    font-size: 10px;
+  }
 
-.text-pp{
-  font-size: 10px;
-}
+  .profil-picture {
+    height: 20px;
+    width: 20px;
+    margin-left: 5px;
+  }
 
-.profil-picture{
-  height: 20px;
-  width: 20px;
-  margin-left: 5px;
-}
-
-.trash{
-  font-size: 20px;
-}
-
-.edit{
-  font-size: 20px;
-}
-
-.favorite{
-  font-size: 20px;
-}
-
-.heart-number{
-  font-size: 11px;
-}
-
-.publication{
-  margin: 0;
-  width: 85%;
-  margin-top: 30px;
-  margin-bottom: 30px;
-}
-
-.main-list{
-  font-size: 11px;
-}
-
-#group-logo{
-  width: auto;
-}
-
-#new-comment{
-  font-size: 11px;
-}
-
+  #group-logo {
+    width: auto;
+  }
 }
 </style>
 
 <script>
 // @ is an alias to /src
 import Footer from '@/components/Footer.vue'
+import Poste from '@/components/Poste.vue'
+import router from '@/router'
+import store from '@/store'
+
 export default {
   name: 'Accueil',
-  components: { Footer }
+  components: { Footer, Poste },
+  data() {
+    return {
+      postes: null,
+      nom: null,
+      prenom: null,
+      profil_image: null
+    }
+  },
+  //computed = "calculer" des données à la volée, par exemple (ce cas-ci) permet d'afficher les éléments que l'on appel
+  computed: {
+    isAdmin() {
+      return store.state.admin;
+    },
+    userId() {
+      return store.state.userId;
+    },
+    user_name() {
+      return this.nom + " " + this.prenom;
+    }
+  },
+  methods: {
+    //appuie du bouton deconnexion = suppression du local storage + store et renvoi à la page login
+    logout() {
+      store.state.admin = null;
+      store.state.userId = null;
+      store.state.token = null;
+      store.state.nom = null;
+      store.state.prenom = null;
+      store.state.profil_image = null;
+      sessionStorage.clear();
+      router.push("/");
+    }
+  },
+  //(Vue) mounted = au moment de la création de la vue pour récupérer les différents postes
+  mounted() {
+    if (store.state.token != null) {
+      //création d'options avec la méthode GET + bearer token
+      const options = {
+        method: 'GET',
+        headers: {
+          "Authorization": "Bearer " + store.state.token
+        }
+      };
+      //fetch pour récupérer tous les postes
+      fetch("http://localhost:3000/api/poste", options)
+        //1ère promesse : convertit en JSON
+        .then(res => {
+          return res.json();
+        })
+        //2ème promesse : met les données dans le data.poste
+        .then(data => {
+          if (!data.error) {
+            this.postes = data;
+          } else {
+
+          }
+        })
+        //si erreur
+        .catch(err => {
+          console.log(err.error)
+        })
+
+      //si il manque des infos dans le store(nom, prenom et profil img),
+      if (store.state.nom == null) {
+        //on les récupère :
+        fetch("http://localhost:3000/api/auth", options)
+          //on convertit en JSON
+          .then(res => {
+            return res.json();
+          })
+          //on recup les infos user pour le mettre dans le store et data de accueil
+          .then(data => {
+            //si pas d'erreur on recup les infos du user :
+            if (!data.error) {
+              this.nom = data.nom;
+              this.prenom = data.prenom;
+              this.profil_image = data.profil_image;
+              store.state.nom = this.nom;
+              store.state.prenom = this.prenom;
+              store.state.profil_image = this.profil_image;
+            //si erreur
+            } else {
+              //on efface tout(store + session storage)
+              sessionStorage.clear();
+              store.state.nom = null;
+              store.state.prenom = null;
+              store.state.profil_image = null;
+              store.state.token = null;
+              store.state.userId = null;
+              store.state.admin = false;
+              //et on renvoi à la page de login
+              router.push("/");
+            }
+
+          }).catch(err => {
+            console.log(err.error);
+          })
+      //si déjà dans le store
+      } else {
+        //on met ces infos dans data de accueil
+        this.nom = store.state.nom;
+        this.prenom = store.state.prenom;
+        this.profil_image = store.state.profil_image;
+      }
+    //si user n'a pas de token  
+    } else {
+      //on renvoie sur la page de login
+      router.push("/");
+    }
+  }
 }
 </script>

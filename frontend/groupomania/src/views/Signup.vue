@@ -8,10 +8,10 @@
       
         <div id="formulaire">
           <label for="file" class="label-file">Choisir une image de profil</label>
-          <input id="file" class="input-file" type="file">
-          <!-- <label for="file">Ajouter une image de profil</label>
-          <br>
-          <input id="file" type="file"> -->
+          <input id="file" class="input-file" type="file"  @change="change_name">
+          <div id="preview">
+            <img class="profil-picture" v-if="url" :src="url" />
+          </div>
           <input class="txt" type="text" placeholder="Nom" v-model="nom">
           <input class="txt" type="text" placeholder="Prénom" v-model="prenom">
           <input class="txt" type="text" placeholder="Poste occupé" v-model="poste">
@@ -19,6 +19,7 @@
           <input class="txt" type="email" placeholder="Mail" v-model="mail">
           <input class="txt" type="password" placeholder="Password" v-model="password">
           <button @click="signup" id="inscription">S'inscrire</button>
+          <span class="error-message">{{ error_message }}</span>
         </div>
     </div>
     
@@ -31,6 +32,25 @@
 </template>
 
 <style scoped>
+.profil-picture {
+  position: relative;
+  display: inline-block;
+  height: 80px;
+  width: 80px;
+  border-radius: 100%;
+  border: 1px solid #deebff;
+  text-align: center;
+  margin-right: 6px;
+  margin-left: 10px;
+  object-fit: cover;
+}
+
+.error-message{
+  color:#FD2D01;
+  text-align: center;
+  font-size: 15px;
+}
+
 .home{
   margin: 0;
   background-color: white!important;
@@ -169,6 +189,11 @@ label{
 }
 
 @media all and (max-width: 768px){
+
+.error-message{
+  font-size: 11px;
+}
+
 .group-logo{
   width: 70%;
 }
@@ -221,56 +246,107 @@ export default {
       mail: null,
       password: null,
       age: null,
-      poste: null
+      poste: null,
+      error_message:null,
+      url:null
     }
   },
   methods:{
-    signup(){
-      console.log(this.input_verification());
-      //permet de récupérer l'img de l'input
-      let image = document.getElementById("file").files[0]
-      //On crée un formulaire
-      let formData = new FormData();
-      //on ajoute au formulaire les input(ils font ref à data par le v-model)
-      formData.append("image", image);
-      formData.append("nom", this.nom);
-      formData.append("prenom", this.prenom);
-      formData.append("mail", this.mail);
-      formData.append("password", this.password);
-      formData.append("age", this.age);
-      formData.append("poste_occupe", this.poste);
-
-      //création d'options de l'envoie à l'API avec la méthode (POST) + les données formData
-      const options = {
-          method: 'POST',
-          body: formData,
-      };
-
-      //Je fais appel à l'API
-      fetch("http://localhost:3000/api/auth/signup", options)
-
-      /*1ère promesse .then = récupérer le résultat (res) de la requête au format JSON
-      avec une vérif préalable que la requête s'est bien passée*/
-        .then(function(res){
-          if(res.ok){
-            return res.json();
-          }
-        })
-
-      //2ème promesse si la 1ère est bonne :
-        .then(function(value){
-          alert("Votre compte a bien été créé");
-          router.push("/")
-        })
-        
-      //Si il y a une erreur au moment d'appeler le serveur, on renvoi :
-        .catch(function(err) {
-          alert("Une erreur est survenue... Le serveur ne répond pas")
-        });
+    change_name(){
+      let image = document.getElementById("file").files[0];
+      this.url = URL.createObjectURL(image);
     },
+    signup(){
+      let error = this.input_verification();
+      if(error != ""){
+        // une erreur
+        this.error_message = error;
+      }else{
+        //permet de récupérer l'img de l'input
+        let image = document.getElementById("file").files[0]
+        //On crée un formulaire
+        let formData = new FormData();
+        //on ajoute au formulaire les input(ils font ref à data par le v-model)
+        formData.append("image", image);
+        formData.append("nom", this.nom);
+        formData.append("prenom", this.prenom);
+        formData.append("mail", this.mail);
+        formData.append("password", this.password);
+        formData.append("age", this.age);
+        formData.append("poste_occupe", this.poste);
+
+        //création d'options de l'envoie à l'API avec la méthode (POST) + les données formData
+        const options = {
+            method: 'POST',
+            body: formData,
+        };
+
+        //Je fais appel à l'API
+        fetch("http://localhost:3000/api/auth/signup", options)
+
+        /*1ère promesse .then = récupérer le résultat (res) de la requête au format JSON
+        avec une vérif préalable que la requête s'est bien passée*/
+          .then(function(res){
+            if(res.ok){
+              return res.json();
+            }
+          })
+
+        //2ème promesse si la 1ère est bonne :
+          .then(function(value){
+            if(value.error){
+              alert("Une erreur est survenue");
+            }else{
+              alert("Votre compte a bien été créé");
+              router.push("/")
+            }
+          })
+          
+        //Si il y a une erreur au moment d'appeler le serveur, on renvoi :
+          .catch(function(err) {
+            alert("Une erreur est survenue... Le serveur ne répond pas")
+          });
+        }
+    },
+
     input_verification(){
-      return 3
+
+      let mail = this.mail;
+      let password = this.password;
+      let nom = this.nom;
+      let prenom = this.prenom;
+      let age = this.age;
+      let poste = this.poste;
+
+      let error = "";
+      const PASSWORD_REGEX =  /(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*]).{8,}$/;
+      const MAIL_REGEX =  /^[a-zA-Z0-9-_.]+[@]{1}[a-zA-Z]+[.]{1}[a-z]{2,10}$/;
+      const NOM_PRENOM_REGEX = /^([a-zA-ZÉéèàçùêâûôëï'-]+)$/;
+      const POSTE_REGEX = /^([ a-zA-ZÉéèàçùêâûôëï'-]+)$/;
+
+      if(password == null || !password.match(PASSWORD_REGEX)){
+        error += "Le mot de passe doit contenir 8 caractères minimum, une majuscule, une minuscule, un symbole et un chiffre; "
+      }
+      if(mail == null || !mail.match(MAIL_REGEX)){
+        error += "L'adresse mail n'est pas valide; "
+      }
+      if(nom == null || !nom.match(NOM_PRENOM_REGEX)){
+        error += "Le nom n'est pas valide; "
+      }
+      if(prenom == null || !prenom.match(NOM_PRENOM_REGEX)){
+        error += "Le prénom n'est pas valide; "
+      }
+      if(age == null || age == undefined || age == ""){
+        error += "Veuillez saisir une date; "
+      }
+      if(poste == null || !poste.match(POSTE_REGEX)){
+        error += "Veuillez indiquer un poste; "
+      }
+
+      return error;
+
     }
+
   }
 
 }
