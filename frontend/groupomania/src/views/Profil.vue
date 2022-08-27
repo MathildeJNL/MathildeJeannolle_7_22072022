@@ -3,32 +3,24 @@
   <header id="red-band">
     <router-link id="return" to="/accueil"><img id="group-logo" src="../assets/whitelogo.png" alt="logo entreprise">
     </router-link>
-    <div id="bloc-header-right">
-      <router-link class="text-nav" to="/newpost">
-        <link rel="stylesheet"
-          href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
-        <span class="material-symbols-outlined add">add</span>
-      </router-link>
-      <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
-      <span class="material-symbols-outlined logout">logout</span>
-      <p class="text-pp"><img class="profil-picture logo-background-white" src="../assets/logo.png" alt="user profil picture">User Name</p>
-    </div>
+    <p class="text-pp"><img class="profil-picture logo-background-white" :src="profil_image" alt="profil">{{ user_name
+    }}</p>
   </header>
-
-  <!--définir les routes-->
 
   <section id="main">
 
     <div class="publication">
-      <img class="profil-picture main-profil" src="../assets/logo.png" alt="test">
-      <p class="text main-info">NOM - Prénom</p>
-      <p class="text">Data Analyst</p>
-      <p class="text">Anniversaire dans xx jours</p>
+      <img class="profil-picture main-profil" :src="profil_image" alt="profil">
+      <p class="text main-info">{{ nom }} - {{ prenom }}</p>
+      <p class="text">{{ poste_occupe }}</p>
+      <p class="text">Anniversaire dans {{ day_last_birth }} jours</p>
       <router-link id="modif-button" to="/modification">Modifier le profil</router-link>
     </div>
 
   </section>
+
   <Footer :isFixed="true"></Footer>
+
 </template>
 
 <style scoped>
@@ -177,71 +169,165 @@ header {
 }
 
 @media all and (min-width: 769px) and (max-width: 1024px) {
-
   .publication {
     width: 60%;
     padding-bottom: 15px;
   }
-
 }
 
-@media all and (max-width: 768px){
-  
-p{
-  font-size: 11px;
-}
+@media all and (max-width: 768px) {
 
-.logout{
-  font-size: 20px;
-}
+  p {
+    font-size: 11px;
+  }
 
-.add{
-  font-size: 20px;
-}
+  .logout {
+    font-size: 20px;
+  }
 
-.text-pp{
-  font-size: 10px;
-}
+  .add {
+    font-size: 20px;
+  }
 
-.profil-picture{
-  height: 20px;
-  width: 20px;
-}
+  .text-pp {
+    font-size: 10px;
+  }
 
-.main-profil{
-  height: 60px;
-  width: 60px;
-}
+  .profil-picture {
+    height: 20px;
+    width: 20px;
+  }
 
-.main-info{
-  font-size: 15px;
-}
+  .main-profil {
+    height: 60px;
+    width: 60px;
+  }
 
-.publication{
-  margin: 0;
-  width: 85%;
-  margin-top: 30px;
-  margin-bottom: 30px;
-}
+  .main-info {
+    font-size: 15px;
+  }
 
-#group-logo{
-  width: auto;
-}
+  .publication {
+    margin: 0;
+    width: 85%;
+    margin-top: 30px;
+    margin-bottom: 30px;
+  }
 
-#modif-button{
-  width: 35%;
-  height: 20px;
-  font-size: 11px;
-}
+  #group-logo {
+    width: auto;
+  }
 
+  #modif-button {
+    width: 35%;
+    height: 20px;
+    font-size: 11px;
+  }
 }
 </style>
 
-<script>
+<script setup>
+
+function with_2_digit(value) {
+  if (value < 10)
+    value = "0" + value
+  return value
+}
+//internet : permet de trouver le nbre de jours avant l'anniv =>
+function until_day_birth(value) {
+  let date = new Date(value);
+  let date_day = date.getDate();
+  let date_month = date.getMonth() + 1;
+
+  var myBirthday, today, bday, diff, days;
+
+  myBirthday = [date_day, date_month]
+
+  today = new Date();
+  bday = new Date(today.getFullYear(), myBirthday[1] - 1, myBirthday[0]);
+  if (today.getTime() > bday.getTime()) {
+    bday.setFullYear(bday.getFullYear() + 1);
+  }
+  diff = bday.getTime() - today.getTime();
+  days = Math.floor(diff / (1000 * 60 * 60 * 24));
+  return days
+}
+
+</script>
+
+<script scoped>
 // @ is an alias to /src
 import Footer from '@/components/Footer.vue'
+import router from '@/router'
+import store from '@/store'
+
 export default {
   name: 'Profil',
-  components: { Footer }
+  components: { Footer },
+  data() {
+    return {
+      nom: null,
+      prenom: null,
+      profil_image: null,
+      poste_occupe: null,
+      age: null,
+    }
+  },
+  computed: {
+    isAdmin() {
+      return store.state.admin;
+    },
+    userId() {
+      return store.state.userId;
+    },
+    user_name() {
+      return this.nom + " " + this.prenom;
+    },
+    day_last_birth() {
+      let days = this.until_day_birth(this.age)
+      return days;
+      //return 0
+    }
+  },
+  mounted() {
+    if (store.state.token != null) {
+      const options = {
+        method: 'GET',
+        headers: {
+          "Authorization": "Bearer " + store.state.token
+        }
+      };
+      fetch("http://localhost:3000/api/auth", options)
+        .then(res => {
+          return res.json();
+        })
+        .then(data => {
+          if (!data.error) {
+            this.nom = data.nom;
+            this.prenom = data.prenom;
+            this.profil_image = data.profil_image;
+            this.poste_occupe = data.poste_occupe;
+            this.age = data.age;
+            store.state.nom = this.nom;
+            store.state.prenom = this.prenom;
+            store.state.profil_image = this.profil_image;
+          } else {
+            sessionStorage.clear();
+            store.state.nom = null;
+            store.state.prenom = null;
+            store.state.profil_image = null;
+            store.state.token = null;
+            store.state.userId = null;
+            store.state.admin = false;
+            router.push("/")
+          }
+        })
+        .catch(err => {
+          console.log(err.error)
+        });
+    } else {
+      router.push("/")
+    }
+  }
 }
 </script>

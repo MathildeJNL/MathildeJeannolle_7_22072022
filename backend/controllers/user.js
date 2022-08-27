@@ -23,7 +23,7 @@ exports.create_admin = (req, res, next) => {
         };
         User.create(user).then(data =>{
 
-            res.send(data)
+            res.status(201).json({message:"admin create"})
 
         }).catch(err => {
 
@@ -88,9 +88,11 @@ exports.deleteUser = (req,res,next) =>{
                 .then(() => {
                     if(user.profil_image != "" && user.profil_image != null && user.profil_image != undefined){
                         var filename = user.profil_image
-                        fs.unlink(`images/${filename}`,()=>{
-                            res.status(201).json({message: "Utilisateur Supprimé !"})
-                        })
+                        if(filename != "default_icon.png"){
+                            fs.unlink(`images/${filename}`,()=>{
+                                res.status(201).json({message: "Utilisateur Supprimé !"})
+                            })
+                        }
                     }else{
                         res.status(201).json({message: "Utilisateur Supprimé !"})
                     }
@@ -224,12 +226,14 @@ exports.update = (req, res, next) => {
                 
                 var allPath =  user.profil_image
                 var filename = allPath.split("/")[allPath.split("/").length - 1]
-                fs.unlink(`./images/${filename}`,()=>{})
+                if(filename != "default_icon.png"){
+                    fs.unlink(`./images/${filename}`,()=>{})
+                }
                 
             }
             User.update(newUser , { where: {utilisateur_id : req.auth.userId}})
                 .then(() =>{res.status(201).json({message:"Utilisateur modifié"})})
-                .catch(err => {res.status(500).json({err})});
+                .catch(err => {res.status(500).json({error:err.message})});
         })
         .catch(error => res.status(500).json({error}))
     }
