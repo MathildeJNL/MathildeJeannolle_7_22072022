@@ -163,11 +163,13 @@ exports.update = (req, res, next) => {
                 Poste.update(newPoste, { where: { poste_id: req.params.id } }).then(data => {
 
                     if (deletedOldFile) {
-                        var allPath = poste.poste_image
-                        var filename = allPath.split("/")[allPath.split("/").length - 1]
-                        fs.unlink(`./images/${filename}`, () => { 
-                            console.log("Suppresion file " + filename + " réussi")
-                        })
+                        if(poste.poste_image != null &&  poste.poste_image != "" && poste.poste_image != undefined){
+                            var allPath = poste.poste_image
+                            var filename = allPath.split("/")[allPath.split("/").length - 1]
+                            fs.unlink(`./images/${filename}`, () => { 
+                                console.log("Suppression file " + filename + " réussi")
+                            })
+                        }
                     }
 
                     res.status(201).json({message: "Poste mis à jour"})
@@ -180,5 +182,4 @@ exports.update = (req, res, next) => {
             }
         })
         .catch(error => res.status(500).json({ error:error.message }));
-
 };

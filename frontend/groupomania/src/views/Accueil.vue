@@ -6,11 +6,11 @@
       <router-link class="text-nav" to="/newpost">
         <link rel="stylesheet"
           href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
-        <span class="material-symbols-outlined add">add</span>
+        <span title="Créer un poste" class="material-symbols-outlined add">add</span>
       </router-link>
       <link rel="stylesheet"
         href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
-      <span class="material-symbols-outlined logout" @click="logout">logout</span>
+      <span title="Déconnexion" class="material-symbols-outlined logout" @click="logout">logout</span>
       <router-link class="text-nav" to="/profil">
         <p class="text-pp"><img class="profil-picture logo-background-white" :src="profil_image" alt="profil">{{ user_name }}</p>
       </router-link>

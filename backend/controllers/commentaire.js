@@ -41,7 +41,7 @@ exports.deleteCommentaire = (req, res, next) => {
         if(req.auth.userId == commentaire.utilisateur_id || req.auth.admin){
             // suppression du commentaire
             Commentaire.destroy({ where: {commentaires_id: commentaire.commentaires_id}})
-                .then(() => res.status(201).json({message: "Commentaire Supprimé !"}))
+                .then(() => res.status(201).json({message: "Commentaire supprimé !"}))
                 .catch(err => res.status(500).json({err, error: err.message}));
         //si il n'a pas les droits on renvoie un message d'erreur
         }else{

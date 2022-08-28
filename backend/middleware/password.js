@@ -6,6 +6,6 @@ module.exports = (req, res, next) => {
       next();
   } else {
       //écrire la réponse avec une erreur 400 + le motif de l'erreur
-        res.status(400).json({message:"Le mot de passe doit contenir 8 caractère minimum, une majuscule, un chiffre et un symbole"})
+        res.status(400).json({message:"Le mot de passe doit contenir 8 caractères minimum, une majuscule, un chiffre et un symbole"})
   }
 };

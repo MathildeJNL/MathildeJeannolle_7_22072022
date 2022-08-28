@@ -8,8 +8,7 @@ module.exports = (req, res, next) => {
         donc au n°1 dans le tableau*/
         const token = req.headers.authorization.split(' ')[1];
         /*=>la fonction verify permet de faire une vérification que le token soit correct (bon mot de passe)
-        puis le décode (on récupère le payload)
-        */
+        puis le décode (on récupère le payload)*/
         const decodedToken = jwt.verify(token, 'RANDOM_TOKEN_SECRET');
         const userId = decodedToken.userId;
         const admin = decodedToken.admin;

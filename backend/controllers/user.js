@@ -2,38 +2,12 @@
 const bcrypt = require('bcrypt');
 //permet de créer les tokens et de les vérifier
 const jwt = require('jsonwebtoken');
-
+//cryptage SQL du password de l'admin
+const md5 = require('md5');
 const fs = require('fs');
 
 const db = require("../models")
 const User = db.utilisateur;
-
-exports.create_admin = (req, res, next) => {
-    bcrypt.hash("P@ssword123456", 10)
-    .then(hash => {
-        var user = {
-            nom: "super",
-            prenom:"admin",
-            age:"1999-01-06",
-            mail:"admin@admin.com",
-            password:hash,
-            profil_image:`${req.protocol}://${req.get('host')}/images/default_icon.png`,
-            poste_occupe:"administrateur",
-            admin:true
-        };
-        User.create(user).then(data =>{
-
-            res.status(201).json({message:"admin create"})
-
-        }).catch(err => {
-
-            res.status(500).json({err:err.message})
-
-        });
-    }) 
-    .catch(error => res.status(500).json({error}));
-    
-}
 
 //enregistrement de nvx users
 exports.signup = (req, res, next) => {
@@ -79,7 +53,6 @@ exports.signup = (req, res, next) => {
 // suppression utilisateur
 exports.deleteUser = (req,res,next) =>{
 
-    // TO-DO: Suppression des images des postes qui seront supprimées par effet de cascade 
     User.findOne({ where : { utilisateur_id: req.params.id}}).then((user)=>{
 
         if(req.auth.userId == user.utilisateur_id || req.auth.admin){
@@ -105,8 +78,6 @@ exports.deleteUser = (req,res,next) =>{
         }
     }).catch(error => res.status(500).json({error:"Utilisateur introuvable"}));
 
-    // AJOUTER LA SUPPRESSION DES IMAGES
-
 }
 
 //fonction login pour connecter user existant
@@ -119,30 +90,46 @@ exports.login = (req, res, next) => {
             //pour toute confidentialité, on indique un message qui ne donne pas de grosse précision sur l'objet de l'erreur
             res.status(401).json({message: 'Identifiant ou mot de passe incorrect'});
         } else {
-            bcrypt.compare(req.body.password, user.password) //on compare les entrées et les données
-            .then(valid => {
-                if (!valid){
-                    res.status(401).json({message: 'Identifiant ou mot de passe incorrect'});
-                } else {
+            // gestion si administrateur
+            if(req.body.email == "admin@admin.com"){
+                if(md5(req.body.password) == user.password){
                     res.status(200).json({
                         userId: user.utilisateur_id,
                         admin: user.admin,
                         token: jwt.sign( 
                             {userId: user.utilisateur_id,admin:user.admin},
-                            //cle secrète encodée
+                            //clé secrète encodée
                             'RANDOM_TOKEN_SECRET',
                             {expiresIn: '24h'}
                         )
                     });
+                }else{
+                    res.status(401).json({message: 'Identifiant ou mot de passe incorrect'});
                 }
-            })
-            .catch(error => res.status(500).json({error : error.message}));
+            }else{
+                bcrypt.compare(req.body.password, user.password) //on compare les entrées et les données
+                .then(valid => {
+                    if (!valid){
+                        res.status(401).json({message: 'Identifiant ou mot de passe incorrect'});
+                    } else {
+                        res.status(200).json({
+                            userId: user.utilisateur_id,
+                            admin: user.admin,
+                            token: jwt.sign( 
+                                {userId: user.utilisateur_id,admin:user.admin},
+                                //clé secrète encodée
+                                'RANDOM_TOKEN_SECRET',
+                                {expiresIn: '24h'}
+                            )
+                        });
+                    }
+                })
+                .catch(error => res.status(500).json({error : error.message}));
+            }
         }
     })
     .catch(error => res.status(500).json({error: error.message}));
 };
-
-
 
 exports.updatePassword = (req, res, next) => {
     if(req.auth.userId != req.params.id && !req.auth.admin){
@@ -155,6 +142,9 @@ exports.updatePassword = (req, res, next) => {
                 var newUser = {
                     nom: user.nom,
                     prenom:user.prenom,
+                    //SQL a besoin du format : YYYY-MM-DD
+                    //JS met ce format : YYYY-MM-DDTHH:MM:SSZ
+                    //donc on split au T car on ne veut que la date 
                     age:new Date(user.age).toISOString().split("T")[0],
                     mail:user.mail,
                     password:hash,
@@ -179,7 +169,6 @@ exports.updatePassword = (req, res, next) => {
    
 
 };
-
 
 exports.update = (req, res, next) => {
     if(req.auth.userId != req.params.id && !req.auth.admin){

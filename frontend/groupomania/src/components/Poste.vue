@@ -6,21 +6,21 @@
         <div id="modification-icon" v-if="good_right">
             <div class="button" @click="deletePost">
                 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,300,0,0" />
-                <span class="material-symbols-outlined trash">delete</span>
+                <span title="Supprimer" class="material-symbols-outlined trash">delete</span>
             </div>
             <div class="button" @click="updateMethod">
                 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
-                <span class="material-symbols-outlined edit">edit</span>
+                <span title="Modifer" class="material-symbols-outlined edit">edit</span>
             </div>
         </div>
     </div>
     <div class="picture-post">
         <!-- Mode edition -->
-        <div class="change" v-if="edit_mode">
+        <!-- <div class="change" v-if="edit_mode">
           <label for="file" class="label-file">Modifier l'image</label>
           <input id="file" class="input-file" type="file" @change="change_name">
-        </div>
-        
+        </div> -->
+        <hr>
         <div v-if="contains_image">
           <img v-if="edit_mode" class="pict" :src="image_temp" alt="image_poste">
           <img v-else class="pict" :src="image_du_poste" alt="image_poste">
@@ -42,7 +42,7 @@
 
         <p class="description">{{ description_du_poste }}</p>
 
-        <p class="description">{{ converted_date(date_creation) }}</p>
+        <p class="description date-modif">{{ converted_date(date_creation) }}</p>
 
     </div>
     <hr>
@@ -51,14 +51,13 @@
         <div class="comments" v-if="contains_commentaire">
             <div v-for="commentaire in all_commentaire" :key="commentaire.commentaires_id">
                 <p class="user-id-comment"><img class="profil-picture" :src="commentaire.utilisateur.profil_image" alt="profil">
-                {{ commentaire.utilisateur.nom }} {{commentaire.utilisateur.prenom}} a écrit ({{ converted_date(commentaire.date_creation) }}) :
+                <span class="user-comm">{{ commentaire.utilisateur.nom }} {{commentaire.utilisateur.prenom}}</span> a écrit <span class="date-modif">({{ converted_date(commentaire.date_creation) }})</span> :
                 </p>
                 <div class="commentaire">
                   <p class="comment">{{ commentaire.texte_commentaire }}</p> 
                   <span v-if="userId == commentaire.utilisateur.utilisateur_id || admin" class="delete-cross" @click="delete_commentaire(commentaire.commentaires_id)">X</span>
                 </div>
             </div>
-            <hr>
         </div>
         
         <div id="main-new-comment">
@@ -127,7 +126,7 @@
 }
 
 hr{
-  width: 50%;
+  width: 99%;
 }
 
 .publication {
@@ -162,7 +161,6 @@ hr{
   cursor: pointer;
 }
 
-/*au lieu du hover ce sera au click du coeur*/
 .material-symbols-outlined:hover {
   font-variation-settings:
   'FILL' 1,
@@ -200,6 +198,7 @@ hr{
   display: flex;
   align-items: center;
   margin-right: 15px;
+  font-weight: bold;
 }
 
 .pict {
@@ -211,6 +210,16 @@ hr{
 
 .description{
   margin-left: 10px;
+}
+
+.date-modif{
+  font-style: italic;
+  font-size: 12px;
+  color: grey;
+}
+
+.user-comm{
+  font-weight: bold;
 }
 
 .user-id-comment{
@@ -317,8 +326,8 @@ hr{
   #publier{
     width: 60%;
   }
-}
 
+}
 
 @media all and (max-width: 768px) {
   p{
@@ -333,7 +342,9 @@ hr{
   }
 
   #publier{
-    width: 60%;
+    font-size: 14px;
+    width: 40%;
+    height: 20px;
   }
 
   .text-pp{
@@ -367,6 +378,7 @@ hr{
     width: 85%;
     margin-top: 30px;
     margin-bottom: 30px;
+    box-shadow: 6px 6px 25px #ffd7d7;
   }
 
   .main-list{
@@ -375,6 +387,12 @@ hr{
 
   #new-comment{
     font-size: 11px;
+  }
+
+  #send-commentaire{
+    font-size: 14px;
+    width: 40%;
+    height: 20px;
   }
 }
 
@@ -513,7 +531,7 @@ export default {
           alert(data.error);
         //sinon une autre erreur (pb serveur)  
         }else{
-          alert("La suppresion ne fonctionne pas pour le moment.");
+          alert("La suppression ne fonctionne pas pour le moment.");
         }
       } else {
         // do nothing
@@ -578,7 +596,8 @@ export default {
     //MAJ du poste
     async update_poste(){
       //récupère l'img
-      let image = document.getElementById("file").files[0];
+      // let image = document.getElementById("file").files[0];
+      let image = null;
       //crée le nv formulaire
       let formData = new FormData();
       //nvlle description
@@ -667,7 +686,7 @@ export default {
         }
         
       }else{
-        this.error_message = "veuillez saisir un commentaires.";
+        this.error_message = "veuillez saisir un commentaire.";
       }
 
     },

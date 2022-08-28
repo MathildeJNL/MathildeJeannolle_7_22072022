@@ -73,3 +73,7 @@ CREATE TABLE coeur(
 	,CONSTRAINT coeur_utilisateur_FK FOREIGN KEY (utilisateur_id) REFERENCES utilisateur(utilisateur_id) ON DELETE CASCADE ON UPDATE NO ACTION
 	,CONSTRAINT coeur_poste0_FK FOREIGN KEY (poste_id) REFERENCES poste(poste_id) ON DELETE CASCADE ON UPDATE NO ACTION
 )ENGINE=InnoDB;
+
+
+INSERT INTO `utilisateur` (`utilisateur_id`,`nom`,`prenom`,`age`,`password`,`profil_image`,`poste_occupe`,`admin`,`mail`) 
+VALUES (DEFAULT,'Admin','Super','1999-01-06',MD5('P@ssword123456'),'http://localhost:3000/images/default_icon.png','Administrateur',1,'admin@admin.com');

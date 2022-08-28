@@ -16,7 +16,7 @@ const storage = multer.diskStorage({ //configure le chemin et le nom de fichier 
     filname: (req, file, callback) => { //La fonction "filename" indique à multer d'utiliser le nom d'origine 
         
         const name = file.originalname.split(' ').join('_'); //remplacer les espaces par des caractères de soulignement et ajouter l'horodatage comme nom de fichier
-        const extension = MIME_TYPES[file.mimetype]; // Utilisez la constante du dictionnaire MIME pour résoudre l'extension de fichier appropriée ( ?).
+        const extension = MIME_TYPES[file.mimetype]; //Utiliser la constante du dictionnaire MIME pour résoudre l'extension de fichier appropriée
         callback(null, name + Date.now() + '.' + extension);
     }
 });
