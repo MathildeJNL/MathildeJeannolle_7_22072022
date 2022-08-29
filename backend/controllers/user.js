@@ -235,7 +235,6 @@ exports.profil = (req, res, next) => {
         res.send(user)
     })
     .catch(error => res.status(500).json({error}))
-   
 
 };
 

@@ -75,10 +75,11 @@ exports.getAll = (req, res, next) => {
         { model: Commentaire, as: "commentaires", order: [['date_creation', 'DESC']], include: [{ model: User, as: "utilisateur" }] }]
     })
         .then(posts => {
-            //count pour chaque poste.coeurs et retourner le nombre de coeurs
-            all_post_reformat = [] //crée un tableau qui contiendra tous les postes
+            //crée un tableau qui contiendra tous les postes
+            all_post_reformat = []
             //on boucle sur tous les postes du findAll
             for (let post of posts) {
+                //count pour chaque poste.coeur et retourner le nombre de coeurs + liked qui permet de savoir si l'user a liké
                 all_post_reformat.push(reformat_post_with_heart(post, req.auth.userId))
             }
             res.status(200).json(all_post_reformat);

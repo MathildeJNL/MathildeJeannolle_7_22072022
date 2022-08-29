@@ -51,7 +51,7 @@
         <div class="comments" v-if="contains_commentaire">
             <div v-for="commentaire in all_commentaire" :key="commentaire.commentaires_id">
                 <p class="user-id-comment"><img class="profil-picture" :src="commentaire.utilisateur.profil_image" alt="profil">
-                <span class="user-comm">{{ commentaire.utilisateur.nom }} {{commentaire.utilisateur.prenom}}</span> a écrit <span class="date-modif">({{ converted_date(commentaire.date_creation) }})</span> :
+                <span class="user-comm">{{ commentaire.utilisateur.nom }} {{ commentaire.utilisateur.prenom }} <span class="light-style">a écrit</span> <span class="date-modif">({{ converted_date(commentaire.date_creation) }})</span></span> :
                 </p>
                 <div class="commentaire">
                   <p class="comment">{{ commentaire.texte_commentaire }}</p> 
@@ -220,6 +220,10 @@ hr{
 
 .user-comm{
   font-weight: bold;
+}
+
+.light-style{
+  font-weight: lighter;
 }
 
 .user-id-comment{
